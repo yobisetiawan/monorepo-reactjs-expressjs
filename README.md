@@ -8,6 +8,7 @@ This Turborepo starter.
 - [x] Monorepo setup via Turborepo https://turbo.build/
 - [x] Firebase Sort using composite index
 
+[Preview video](https://drive.google.com/file/d/11DhBPrdNe7wb740Knqp8FAfdrew7P9-k/view?usp=drive_link)
 
 
 ## What's inside?
