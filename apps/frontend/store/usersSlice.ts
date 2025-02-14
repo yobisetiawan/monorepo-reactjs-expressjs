@@ -1,7 +1,7 @@
 import { UserData } from "@/types";
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
-interface UsersState {
+export interface UsersState {
     data: UserData[];
     isLoading: boolean;
 }

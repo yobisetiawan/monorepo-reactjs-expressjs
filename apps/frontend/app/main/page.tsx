@@ -30,8 +30,8 @@ const LoginForm: React.FC = () => {
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
 
-  const [pageSize, setPageSize] = useState(5);
-  const [lastVisible, setLastVisible] = useState<number | null>(null);
+  const pageSize = 5;
+  const lastVisible = null;
 
   const [selectedRow, setSelectedRow] = useState<{
     id: string;
@@ -42,34 +42,31 @@ const LoginForm: React.FC = () => {
     recentlyActive: number;
   } | null>(null);
 
-  const loadData = useCallback(
-    async () => {
-      dispatch(setUsersLoading({ isLoading: true }));
-      try {
-        let accessToken = user.accessToken;
-        if (!user.accessToken || user.accessToken === "") {
-          const profile = await axios.get("/api/profile");
-          accessToken = profile.data.user.accessToken;
-          dispatch(setUser({ accessToken: accessToken }));
-        }
-
-        const dt = await BaseApi.get(
-          `/app/api/fetch-user-data?pageSize=${pageSize}&lastVisible=${lastVisible}`,
-          {
-            headers: { Authorization: `Bearer ${accessToken}` },
-          }
-        );
-        dispatch(setUsers({ data: dt.data }));
-      } catch (error) {
-        dispatch(setUser({ accessToken: "" }));
-        const axiosError = error as AxiosError;
-        toast.error(axiosError.message);
-        router.push("/login");
+  const loadData = useCallback(async () => {
+    dispatch(setUsersLoading({ isLoading: true }));
+    try {
+      let accessToken = user.accessToken;
+      if (!user.accessToken || user.accessToken === "") {
+        const profile = await axios.get("/api/profile");
+        accessToken = profile.data.user.accessToken;
+        dispatch(setUser({ accessToken: accessToken }));
       }
-      dispatch(setUsersLoading({ isLoading: false }));
-    },
-    [dispatch, router, user.accessToken]
-  );
+
+      const dt = await BaseApi.get(
+        `/app/api/fetch-user-data?pageSize=${pageSize}&lastVisible=${lastVisible}`,
+        {
+          headers: { Authorization: `Bearer ${accessToken}` },
+        }
+      );
+      dispatch(setUsers({ data: dt.data }));
+    } catch (error) {
+      dispatch(setUser({ accessToken: "" }));
+      const axiosError = error as AxiosError;
+      toast.error(axiosError.message);
+      router.push("/login");
+    }
+    dispatch(setUsersLoading({ isLoading: false }));
+  }, [dispatch, router, user.accessToken]);
 
   const columns: GridColDef[] = [
     { field: "id", headerName: "ID" },
